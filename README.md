@@ -1,15 +1,20 @@
 # rice-field-image-segmentation-yolov8-seg
-#Require 
+# Require 
+
   Python: ultralytics
   Module: yolo11n-seg
-#Data processing
+# Data processing
+
   lensfunpy -> kq.jpg
   anylabeling
   label2yolov8
-#Run
+# Run
+
   - Execute script testyolov8.py
   - result: result.jpg
+
     E.x:
+    
         python testyolov8.py
     
   
