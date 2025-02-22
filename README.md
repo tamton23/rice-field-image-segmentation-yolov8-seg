@@ -2,12 +2,16 @@
 # Require 
 
   Python: ultralytics
+  
   Module: yolo11n-seg
 # Data processing
 
   lensfunpy -> kq.jpg
   anylabeling
   label2yolov8
+
+# Data set
+  
 # Run
 
   - Execute script testyolov8.py
@@ -26,7 +30,9 @@
       python lensfunpy_img.py
 
   Show:
-  ![DJI_20240421090746_0003_D](https://github.com/user-attachments/assets/159b7b72-a842-406c-84a7-beca2fc48058) -> ![kq](https://github.com/user-attachments/assets/d39522c6-ce6a-48be-ad08-478dcc96ae97)
+  ![DJI_20240421090746_0003_D](https://github.com/user-attachments/assets/159b7b72-a842-406c-84a7-beca2fc48058)
+  Result:
+  ![kq](https://github.com/user-attachments/assets/d39522c6-ce6a-48be-ad08-478dcc96ae97)
 
 
   
