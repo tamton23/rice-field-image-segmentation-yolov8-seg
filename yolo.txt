@@ -1,0 +1,98 @@
+code của mô hình yolo khi đã có dữ liệu json chuyển bằng labelme2yolo
+Nếu bạn đã có dữ liệu JSON từ LabelMe và đã chuyển đổi sang định dạng YOLO bằng công cụ labelme2yolo, bạn có thể sử dụng YOLOv5 để huấn luyện mô hình. Dưới đây là hướng dẫn chi tiết và code để huấn luyện mô hình YOLO từ dữ liệu đã chuyển đổi.
+
+1. Cấu trúc dữ liệu sau khi chuyển đổi bằng labelme2yolo
+Sau khi chuyển đổi, thư mục dữ liệu của bạn sẽ có cấu trúc như sau:
+
+Copy
+dataset/
+├── images/
+│   ├── train/       # Hình ảnh huấn luyện
+│   └── val/         # Hình ảnh validation
+└── labels/
+    ├── train/       # Nhãn huấn luyện (định dạng YOLO)
+    └── val/         # Nhãn validation (định dạng YOLO)
+Mỗi hình ảnh trong thư mục images/train/ và images/val/ có một file nhãn tương ứng trong thư mục labels/train/ và labels/val/.
+
+File nhãn có định dạng .txt với cấu trúc:
+
+Copy
+<class_id> <x_center> <y_center> <width> <height>
+2. Tạo file cấu hình data.yaml
+Tạo file data.yaml để định nghĩa dữ liệu và các lớp:
+
+yaml
+Copy
+train: dataset/images/train
+val: dataset/images/val
+
+nc: 3  # Số lượng lớp (ví dụ: 3 lớp: lúa, cỏ dại, bệnh)
+names: ['lua', 'co_dai', 'benh']  # Tên các lớp
+YOLOv8 hỗ trợ cả nhận dạng đối tượng (object detection) và phân đoạn (segmentation). Để sử dụng YOLOv8 cho phân đoạn (segmentation), bạn cần thực hiện các bước sau:
+
+1. Cài đặt YOLOv8
+Trước tiên, bạn cần cài đặt thư viện Ultralytics bằng lệnh sau:
+
+bash
+Copy
+pip install ultralytics
+2. Chuẩn bị bộ dữ liệu cho phân đoạn
+Để huấn luyện mô hình YOLOv8 cho phân đoạn, bộ dữ liệu của bạn cần được cấu trúc và định dạng đúng cách. Dữ liệu phân đoạn yêu cầu không chỉ là thông tin về bounding box (hộp giới hạn) mà còn yêu cầu thông tin về các vùng phân đoạn (polygon) cho mỗi đối tượng.
+
+Tệp YAML: Tệp data.yaml vẫn cần phải chỉ ra thông tin về bộ dữ liệu, ví dụ như số lớp và đường dẫn tới các tệp huấn luyện và kiểm tra.
+yaml
+Copy
+train: /path/to/train/images
+val: /path/to/val/images
+
+nc: 3  # Số lượng lớp trong bộ dữ liệu của bạn
+names: ['class1', 'class2', 'class3']  # Tên các lớp đối tượng
+Hình ảnh và nhãn: Tương tự như đối với object detection, mỗi hình ảnh sẽ có một tệp nhãn tương ứng. Tuy nhiên, thay vì chỉ chứa thông tin về bounding box, tệp nhãn cho phân đoạn sẽ chứa thông tin về các polygon.
+3. Huấn luyện mô hình YOLOv8 cho phân đoạn
+YOLOv8 hỗ trợ phân đoạn nhờ vào sự hỗ trợ của segmentation head. Để huấn luyện mô hình cho phân đoạn, bạn chỉ cần chỉ định mô hình YOLOv8 và chọn chế độ phân đoạn.
+
+Sử dụng lệnh sau để huấn luyện mô hình YOLOv8 cho phân đoạn:
+
+bash
+Copy
+yolo train data=/path/to/data.yaml model=yolov8-seg.pt epochs=50
+data=/path/to/data.yaml: Đường dẫn đến tệp YAML chứa thông tin về bộ dữ liệu.
+model=yolov8-seg.pt: Mô hình YOLOv8 với đầu ra phân đoạn (segmentation). Bạn có thể thay thế mô hình này bằng các mô hình như yolov8-seg.pt tùy theo nhu cầu.
+epochs=50: Số epoch để huấn luyện.
+4. Dự đoán phân đoạn
+Sau khi huấn luyện mô hình, bạn có thể sử dụng mô hình để dự đoán phân đoạn trên các hình ảnh mới.
+
+Ví dụ, sau khi huấn luyện xong, bạn có thể dùng mã sau để dự đoán phân đoạn cho hình ảnh:
+
+python
+Copy
+from ultralytics import YOLO
+
+# Tải mô hình phân đoạn đã huấn luyện
+model = YOLO("runs/train/exp/weights/best.pt")
+
+# Dự đoán phân đoạn trên hình ảnh mới
+results = model("path/to/your/image.jpg")
+
+# Hiển thị kết quả phân đoạn
+results.show()
+Mô hình YOLOv8 sẽ hiển thị kết quả phân đoạn trực tiếp trên hình ảnh, bao gồm các lớp và các phân đoạn (polygon) của mỗi đối tượng.
+
+5. Kiểm tra kết quả phân đoạn
+Để kiểm tra và đánh giá kết quả phân đoạn, bạn có thể sử dụng lệnh yolo val:
+
+bash
+Copy
+yolo val data=labelme_json_dir/YOLODataset/dataset.yaml model=../runs/detect/train/weights/best.pt
+Lệnh này sẽ đánh giá mô hình của bạn trên tập kiểm tra và hiển thị các chỉ số như mAP (mean Average Precision) cho phân đoạn.
+
+6. Tính năng phân đoạn của YOLOv8
+Mô hình phân đoạn YOLOv8 sẽ không chỉ tìm thấy các đối tượng trong hình ảnh mà còn vẽ ra các vùng phân đoạn (polygon) cho mỗi đối tượng. Điều này rất hữu ích cho các bài toán yêu cầu sự chính xác cao hơn, chẳng hạn như phân đoạn các đối tượng trong ảnh y tế hoặc phân đoạn trong các ảnh vệ tinh.
+
+Tóm lại các bước sử dụng YOLOv8 cho phân đoạn:
+Cài đặt thư viện: pip install ultralytics.
+Chuẩn bị dữ liệu phân đoạn: Tạo tệp YAML, hình ảnh và nhãn phân đoạn (polygon).
+Huấn luyện mô hình: Sử dụng lệnh yolo train với mô hình phân đoạn.
+Dự đoán phân đoạn: Dự đoán với mô hình đã huấn luyện trên các hình ảnh mới.
+Đánh giá mô hình: Sử dụng lệnh yolo val để kiểm tra hiệu suất.
+YOLOv8 rất mạnh mẽ và linh hoạt, có thể được sử dụng cho nhiều loại bài toán khác nhau, bao gồm cả phân đoạn hình ảnh.
