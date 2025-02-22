@@ -7,8 +7,10 @@
 # Data processing
 
   lensfunpy -> kq.jpg
-  anylabeling
-  label2yolov8
+  
+  anylabeling: label the data
+  
+  label2yolov8: data format
 
 # Data set
   
