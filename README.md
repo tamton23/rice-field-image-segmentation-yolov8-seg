@@ -1,7 +1,7 @@
 # rice-field-image-segmentation-yolov8-seg
 
 # Video test 4 model (Yolov8, Mark R-CNN, deeplabv3, UnetSegformer)
-
+[![Watch the video]](https://drive.google.com/file/d/1RX8wX9yU02q82FP6Hzq5p0T0SZayqvk1/view?usp=drive_link)
 # Require 
 
   Python: ultralytics
