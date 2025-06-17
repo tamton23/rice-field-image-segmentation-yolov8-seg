@@ -1,6 +1,6 @@
 # rice-field-image-segmentation-yolov8-seg
 
-# Video test 4 model (Yolov8, Mark R-CNN, deeplabv3, UnetSegformer)
+# Video test 4 model (Yolov8, Mark R-CNN, deeplabv3, UnetSegformer) on click
 [![Watch the video](https://github.com/user-attachments/assets/3fc453cf-7dcd-4c0d-ba70-5ced35dcf8dd)](https://drive.google.com/file/d/1RX8wX9yU02q82FP6Hzq5p0T0SZayqvk1/view?usp=drive_link)
 # Require 
 
