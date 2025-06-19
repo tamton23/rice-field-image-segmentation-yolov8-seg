@@ -6,7 +6,7 @@
 
   Python: ultralytics
   
-  Module: yolo11n-seg
+  Model: yolov8-seg, Mark R-CNN, deeplabv3, UnetSegformer
 # Data processing
 
   lensfunpy -> kq.jpg
